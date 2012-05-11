@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--Set up the properties appropriate for your local environment-->
+<project name="GlobalBuildSettings">
+	
+	<!--Location where you want source built in your local workspace -->
+	<property name="local.buildspace" value="c:\dev\builds"/>
+
+	<!--Location where you want source built in your local workspace -->
+	<property name="local.workspace" value="c:\dev\work"/>
+
+	<!--Location where Msbuild for .Net 4.0 is installed-->
+	<property name="msbuild4.exe" value="C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe"/>
+</project>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="BuildTargets">
+
+	<!-- Set appropriate variables depending if this is a local or CCNet build -->
+	<target name="DetermineBuild" description="">
+		<property name="solution.buildspace" value="${path::combine(local.buildspace, solution.name)}" />
+		<property name="buildspace.src.dir" value="${path::combine(solution.buildspace, solution.src.dir)}" />
+		<property name="solution.workspace" value="${path::combine(local.workspace, solution.name)}" />
+		<property name="is.release.local" value="true"/>
+		
+		<if test="${property::exists('CCNetLabel')}">
+			<property name="is.release.local" value="false"/>
+			<property name="version.tag" value="${CCNetLabel}"/>
+		</if>
+
+		<echo message="is.release.local = ${is.release.local}"/>
+		<echo message="Version.tag = ${version.tag}"/>
+		<echo message="solution.workspace = ${solution.workspace}" />
+		<echo message="solution.buildspace = ${solution.buildspace}" />
+		<echo message="buildspace.src.dir = ${buildspace.src.dir}" />
+	</target>
+
+
+
+	<!-- Ensure clean project assembly workspace directory for local builds -->
+	<target name="CleanLocalBuildspace">
+		<echo message="Deleting dir ${solution.buildspace}"/>
+		<delete dir="${solution.buildspace}"/>
+		<mkdir dir="${solution.buildspace}" />
+	</target>
+
+	<!-- Copy files to build space -->
+	<target name="AssembleFromWorkspace" depends="CleanLocalBuildspace">
+		<echo message="Assemble from workspace ${solution.workspace} to ${solution.buildspace}"/>
+		<copy todir="${solution.buildspace}"  includeemptydirs="false">
+			<fileset basedir="${solution.workspace}">
+				<include name="**/*" />
+				<exclude name="**/packages/**" />
+				<exclude name="**/bin/**"/>
+				<exclude name="**/obj/**"/>
+				<exclude name="*/Release/**" />
+				<exclude name="*/Debug/**" />
+				<exclude name="**/.git/**" />
+				<exclude name="TestResults/**"/>
+				<exclude name="**/*.user" />
+			</fileset>
+		</copy>
+	</target>
+
+
+
+	<!-- Update each project's assemblyinfo.cs file with version number and company info etc -->
+	<target name="UpdateAssemblyInfo">
+
+		<foreach item="String" in="${solution.projects}" delim="," property="assembly.project.name">
+			
+			<property name="src.dir" value="${path::combine(buildspace.src.dir, assembly.project.name)}" />
+        	<property name="assemblyinfo.cs" value="${path::combine(src.dir, 'Properties\AssemblyInfo.cs')}" />
+
+			<call target="CreateAssemblyInfo"/>
+			
+		</foreach>
+    </target>
+
+	<!-- Create new AssemblyInfo file with version number and company info-->
+    <target name="CreateAssemblyInfo">
+
+    	<echo message="Creating assembly file: ${assemblyinfo.cs}" />
+
+        <asminfo output="${assemblyinfo.cs}"  language="CSharp">
+            <imports>
+                <import namespace="System.Reflection" />
+                <import namespace="System.Runtime.CompilerServices" />
+                <import namespace="System.Runtime.InteropServices" />
+            </imports>
+            <attributes>
+                <attribute type="AssemblyTitleAttribute" value="${assembly.project.name}" />
+                <attribute type="AssemblyDescriptionAttribute" value="" />
+                <attribute type="AssemblyConfigurationAttribute" value="" />
+                <attribute type="AssemblyCompanyAttribute" value="${company.name}" />
+                <attribute type="AssemblyProductAttribute" value="${assembly.project.name}" />
+                <attribute type="AssemblyCopyrightAttribute" value="Copyright (c) ${company.name} ${datetime::get-year(datetime::now())}" />
+                <attribute type="AssemblyTrademarkAttribute" value="" />
+                <attribute type="AssemblyCultureAttribute" value="" />
+                <attribute type="ComVisibleAttribute" value="false" />
+
+                <attribute type="AssemblyVersionAttribute" value="${version.tag}" />
+                <attribute type="AssemblyFileVersionAttribute" value="${version.tag}" />
+            </attributes>
+        </asminfo>
+    </target>
+
+
+
+    <target name="CompileSolution" description="Compiles and packages the solution ready for MsDeploy">
+        <echo message="Compiling soultion: ${solution.buildspace}\${solution.name} with configuration: ${release.configuration}"/>
+        <exec program="${msbuild4.exe}">
+            <arg value="${solution.buildspace}\${solution.name}.sln" />
+            <arg value="/p:Configuration=${release.configuration}" />
+            <arg value="/p:DeployOnBuild=true"/>
+            <arg value="/p:DeployTarget=Package"/>
+            <!-- <arg value="/p:AutoParameterizationWebConfigConnectionStrings=${is.on.physical}"/> --> <!--This flag must be set to false on azure builds-->
+            <arg value="/p:WarningLevel=4" />
+            <arg value="/p:TreatWarningsAsErrors=true"/>
+            <arg value="/v:m" />
+        </exec>
+    </target>
+</project>

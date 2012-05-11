@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<project default="buildRelease" basedir=".">
+
+	<!-- IMPORTANT PLEASE SET THESE VALUES APPROPRIATELY FOR YOUR ENVIRONMENT IN GLOBALBUILDSETTINGS.XML.  If you use NantBuilder -->
+	<!-- on multiple projects you can share the file between multiple projects, by referencing the file, eg c:\dev\globalbuildsettings.xml-->
+	<include buildfile="GlobalBuildSettings.xml" />
+
+	<!--The name of your solution, please overwrite the default -->
+	<property name="solution.name" value="NareshScaler"/>
+
+	<!-- If your projects reside in a different directory from the .sln file specify here, or leave empty if not -->
+	<property name="solution.src.dir" value="src" />
+
+	<!-- Comma seperated list of projects contained in your solution -->
+	<property name="solution.projects" value="NareshScaler.Runner" />
+
+	<!-- Set the configuration for compilation, typically release, but may be custom -->
+	<property name="release.configuration" value="Release" />
+
+	<!-- Manually set version, if using CCNet this will be overwritten later -->
+	<property name="version.tag" value="1.0.0.18"/>
+	<property name="company.name" value="iainhunter.wordpress.com" />	
+	
+	
+	<!-- This target controls the build-->
+	<target name="buildRelease" description="Build the release, and run integration tests">
+
+        <call target="DetermineBuild" />
+		<call target="AssembleFromWorkspace" if="${is.release.local}"/>
+
+		<call target="UpdateAssemblyInfo" />
+
+		<call target="CompileSolution" />
+	</target>
+	
+	<!--Load BuildTargets-->
+	<include buildfile="BuildTargets.xml" />
+
+</project>

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package >
+    <metadata>
+        <id>Nant.Builder</id>
+        <version>1.0.0.0</version>
+        <title>Nant.Builder</title>
+        <authors>Iain Hunter</authors>
+        <projectUrl>https://github.com/hunt3ri/NareshScaler</projectUrl>
+        <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <summary>Nant.Builder provides a buildscript that allows you to automatically build your projects and update assmblyinfo.cs</summary>
+        <description>Nant.Builder provides a set of nant scripts that by setting a few variables specifc to your solution allows you to easily
+            use Nant to build your project automatically</description>
+        <releaseNotes>Initial version</releaseNotes>
+        <copyright>Copyright 2012</copyright>
+        <tags>nant ci continuous integration ccnet cruisecontrol</tags>
+    </metadata>
+    <files>
+        <file src="Nant.build" target="content" />
+        <file src="GlobalBuildSettings.xml" target="content" />
+        <file src="BuildTargets.xml" target="content" />
+    </files>
+</package>
