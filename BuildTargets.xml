@@ -7,6 +7,7 @@
 		<property name="buildspace.src.dir" value="${path::combine(solution.buildspace, solution.src.dir)}" />
 		<property name="solution.workspace" value="${path::combine(local.workspace, solution.name)}" />
 		<property name="is.release.local" value="true"/>
+		<property name="azure.buildspace" value="${path::combine(buildspace.src.dir, azure.project.name)}" />
 		
 		<if test="${property::exists('CCNetLabel')}">
 			<property name="is.release.local" value="false"/>
@@ -18,6 +19,7 @@
 		<echo message="solution.workspace = ${solution.workspace}" />
 		<echo message="solution.buildspace = ${solution.buildspace}" />
 		<echo message="buildspace.src.dir = ${buildspace.src.dir}" />
+		<echo message="azure.buildspace = ${buildspace.src.dir}" />
 	</target>
 
 
@@ -99,10 +101,46 @@
             <arg value="/p:Configuration=${release.configuration}" />
             <arg value="/p:DeployOnBuild=true"/>
             <arg value="/p:DeployTarget=Package"/>
-            <!-- <arg value="/p:AutoParameterizationWebConfigConnectionStrings=${is.on.physical}"/> --> <!--This flag must be set to false on azure builds-->
+            <arg value="/p:AutoParameterizationWebConfigConnectionStrings=false" if="${create.azure.package}" /> <!--This flag must be set to false on azure builds-->
             <arg value="/p:WarningLevel=4" />
             <arg value="/p:TreatWarningsAsErrors=true"/>
             <arg value="/v:m" />
         </exec>
     </target>
+	
+	
+	<target name="CreateAzurePackage" description="Creates package for uploading to Azure">
+		<property name="package.dir" value ="${buildspace.src.dir}/${azure.role.project.name}/obj/${release.configuration}/Package/PackageTmp/"/>
+
+		<echo message="Executing cspack for ${solution.name}, with following arguments:"/>
+		<echo message="/role: ${azure.role.project.name};${package.dir} "/>
+		<echo message="/rolePropertiesFile:${azure.role.project.name};.\AzureRoleProperties.txt" />
+		<echo message="/sitePhysicalDirectories:${azure.role.project.name};Web;${package.dir}"/>
+		<echo message="/out:${azure.buildspace}/${solution.name}-${release.configuration}-${version.tag}.cspkg"/>
+		<echo></echo>
+		
+		<!--Create AzureRoleProperties file-->
+		<touch file="AzureRoleProperties.txt" />
+		<echo file="AzureRoleProperties.txt" message="TargetFrameWorkVersion=v4.0 &#xa;" />
+		<echo file="AzureRoleProperties.txt" append="true" message="EntryPoint=${azure.role.project.name}.dll" />
+
+		<exec program="${cspack.exe}">
+			<arg value="${azure.buildspace}/ServiceDefinition.csdef" />
+			<arg value="/role:${azure.role.project.name};${package.dir}"/>
+			<arg value="/rolePropertiesFile:${azure.role.project.name};.\AzureRoleProperties.txt"/>
+			<arg value="/sitePhysicalDirectories:${azure.role.project.name};Web;${package.dir}"/>
+			<arg value="/out:${azure.buildspace}/${solution.name}-${release.configuration}-${version.tag}.cspkg"/>
+		</exec>
+
+		<!--TODO add release configs-->
+		<echo message="Copy Azure package from ${azure.buildspace} to ${local.releasespace}/${solution.name}"/>
+		<copy todir="${local.releasespace}/${solution.name}" verbose="true" includeemptydirs="false">
+			<fileset basedir="${azure.buildspace}">
+				<include name="**/*.cspkg" />
+				<include name="**/*Cloud*.cscfg" />
+				<exclude name="**/*.csdef"/>
+				<exclude name="**/bin/**"/>
+			</fileset>
+		</copy>
+	</target>
 </project>

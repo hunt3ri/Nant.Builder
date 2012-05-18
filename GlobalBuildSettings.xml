@@ -7,7 +7,13 @@
 
 	<!--Location where you want source built in your local workspace -->
 	<property name="local.workspace" value="c:\dev\work"/>
+	
+	<!--Location where you want source built in your local workspace -->
+	<property name="local.releasespace" value="c:\dev\releases"/>
 
 	<!--Location where Msbuild for .Net 4.0 is installed-->
 	<property name="msbuild4.exe" value="C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe"/>
+	
+	<!--Location for Azure packager cspack-->
+	<property name="cspack.exe" value="C:\Program Files\Windows Azure SDK\v1.6\bin\cspack.exe"/>
 </project>

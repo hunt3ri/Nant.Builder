@@ -11,7 +11,8 @@
 	<!--The name of your solution, please overwrite the default -->
 	<property name="solution.name" value="Nant.Builder.Sample"/>
 
-	<!-- Comma seperated list of projects contained in your solution -->
+	<!-- Comma seperated list of projects contained in your solution, DO NOT include Azure or Build projects, these should be projects 
+	     containing Assembly.Info files, so they get appropriately versioned.-->
 	<property name="solution.projects" value="Nant.Builder.Sample.Services,Nant.Builder.Sample.Tests,Nant.Builder.Sample.Web" />
 
 	<!-- Set the configuration for compilation, typically release, but may be custom -->
@@ -20,6 +21,13 @@
 	<!-- Manually set version, if using CCNet this will be overwritten later -->
 	<property name="version.tag" value="1.0.0.1"/>
 	<property name="company.name" value="iainhunter.wordpress.com" />
+	
+	<!--Azure Settings-->
+	<property name="create.azure.package" value="false" />
+	<!--The name of the project containing the Azure csdef, cscfg files-->
+	<property name="azure.project.name" value="Nant.Builder.Sample.Azure" />
+	<!-- This is the name of the project containing your app entry point, probably the Web project, but may be a library if using a worker role-->
+	<property name="azure.role.project.name" value="Nant.Builder.Sample.Web" />
 
 	<!-- If your projects reside in a different directory from the .sln file specify here, or leave empty if not -->
 	<property name="solution.src.dir" value="src" />
@@ -33,6 +41,8 @@
 		<call target="UpdateAssemblyInfo" />
 
 		<call target="CompileSolution" />
+		
+		<call target="CreateAzurePackage" if="${create.azure.package}" />
 	</target>
 	
 	<!--Load BuildTargets-->

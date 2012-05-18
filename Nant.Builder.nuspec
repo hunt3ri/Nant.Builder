@@ -2,7 +2,7 @@
 <package >
     <metadata>
         <id>Nant.Builder</id>
-        <version>1.0.0.2</version>
+        <version>1.0.0.3</version>
         <title>Nant.Builder</title>
         <authors>Iain Hunter</authors>
         <projectUrl>https://github.com/hunt3ri/Nant.Builder</projectUrl>
@@ -10,9 +10,9 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <summary>Package for getting Nant to automatically build, version and deploy your solution</summary>
         <description>Nant.Builder provides a set of nant scripts that allows you simply build, version and deploy your solution.  See the project site for more details</description>
-        <releaseNotes>Update docs</releaseNotes>
+        <releaseNotes>Adds CreateAzurePackage target</releaseNotes>
         <copyright>Copyright 2012</copyright>
-        <tags>nant ci continuous integration ccnet cruisecontrol</tags>
+        <tags>nant ci continuous integration ccnet cruisecontrol, azure</tags>
     </metadata>
     <files>
         <file src="Nant.build" target="content" />
