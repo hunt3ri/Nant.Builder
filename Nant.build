@@ -27,7 +27,9 @@
 	<!--The name of the project containing the Azure csdef, cscfg files-->
 	<property name="azure.project.name" value="Nant.Builder.Sample.Azure" />
 	<!-- This is the name of the project containing your app entry point, probably the Web project, but may be a library if using a worker role-->
-	<property name="azure.role.project.name" value="Nant.Builder.Sample.Web" />
+	<property name="azure.role.project.name" value="Nant.Builder.Sample.Web" />	
+	<!-- The name of the file containing your exported subcription details - IMPORTANT keep this file safe as it contains very sensitive data about your Azure sub -->
+	<property name="azure.subscripion.details.file" value="c:\dev\tools\windowsazure\subscriptions\yoursubscription.xml"/>
 
 	<!-- If your projects reside in a different directory from the .sln file specify here, or leave empty if not -->
 	<property name="solution.src.dir" value="src" />
@@ -43,6 +45,7 @@
 		<call target="CompileSolution" />
 		
 		<call target="CreateAzurePackage" if="${create.azure.package}" />
+		<call target="DeployAzurePackage" if="${create.azure.package}" />
 	</target>
 	
 	<!--Load BuildTargets-->

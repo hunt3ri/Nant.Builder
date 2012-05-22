@@ -143,4 +143,29 @@
 			</fileset>
 		</copy>
 	</target>
+	
+	<target name="ParseSubscriptionDetails">
+		<xmlpeek file="${azure.subscripion.details.file}"
+				 property="azure.subscription.id"
+				 xpath="//x:Subscriptions/x:Subscription/x:SubscriptionId">
+			<namespaces>
+				<namespace prefix="x" uri="urn:Microsoft.WindowsAzure.Samples.ManagementTools.PowerShell:WaPSCmdlets" />
+			</namespaces>
+		</xmlpeek>
+		
+		<xmlpeek file="${azure.subscripion.details.file}"
+				 property="azure.thumbprint"
+				 xpath="//x:Subscriptions/x:Subscription/x:Thumbprint">
+			<namespaces>
+				<namespace prefix="x" uri="urn:Microsoft.WindowsAzure.Samples.ManagementTools.PowerShell:WaPSCmdlets" />
+			</namespaces>
+		</xmlpeek>
+
+		<echo message="SubId: ${azure.subscription.id}" />
+		<echo message="Thumbprint: ${azure.thumbprint}" />
+	</target>
+	
+	<target name="DeployAzurePackage" depends="ParseSubscriptionDetails" description="Deploys your Azure package to the Cloud :-)">
+	</target>
+	
 </project>
