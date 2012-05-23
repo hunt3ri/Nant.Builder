@@ -16,4 +16,7 @@
 	
 	<!--Location for Azure packager cspack-->
 	<property name="cspack.exe" value="C:\Program Files\Windows Azure SDK\v1.6\bin\cspack.exe"/>
+	
+	<!--Location for Powershell-->
+	<property name="powershell.exe" value="C:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe" />
 </project>
