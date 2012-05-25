@@ -23,7 +23,8 @@
 	<property name="company.name" value="iainhunter.wordpress.com" />
 	
 	<!--Azure Settings-->
-	<property name="create.azure.package" value="false" />
+	<property name="create.azure.package" value="true" />
+	<property name="deploy.azure.package" value="true" />
 	<!--The name of the project containing the Azure csdef, cscfg files-->
 	<property name="azure.project.name" value="Nant.Builder.Sample.Azure" />
 	<!-- This is the name of the project containing your app entry point, probably the Web project, but may be a library if using a worker role-->
@@ -38,14 +39,18 @@
 	<target name="buildRelease" description="Build the release, and run integration tests">
 
         <call target="DetermineBuild" />
-		<call target="AssembleFromWorkspace" if="${is.release.local}"/>
+		<!--<call target="AssembleFromWorkspace" if="${is.release.local}"/>
 
 		<call target="UpdateAssemblyInfo" />
 
-		<call target="CompileSolution" />
+		<call target="CompileSolution" /> 
 		
-		<call target="CreateAzurePackage" if="${create.azure.package}" />
-		<call target="DeployAzurePackage" if="${create.azure.package}" />
+		<call target="CreateAzurePackage" if="${create.azure.package}" /> -->
+
+		<!--We can only deploy package if we've packaged it in the first place-->
+		<if test="${deploy.azure.package and deploy.azure.package}"  >
+			<call target="DeployAzurePackage" />
+		</if>
 	</target>
 	
 	<!--Load BuildTargets-->

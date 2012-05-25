@@ -166,8 +166,9 @@
 	</target>
 	
 	<target name="DeployAzurePackage" depends="ParseSubscriptionDetails" description="Deploys your Azure package to the Cloud :-)">
+	
 		<exec program="${powershell.exe} ">
-			<arg value="C:\dev\work\Nant.Builder.Sample\src\Nant.Builder.Sample.Build\DeployAzureApp.ps1" />
+			<arg value=".\DeployAzureApp.ps1" />
 			<arg value="-environment Staging" />
 			<arg value="-serviceName "/>
 			<arg value="-thumbprint "/>
@@ -175,7 +176,7 @@
 			<arg value="-storageAccountName "/>
 			<arg value="-packageLocation C:\dev\releases\Nant.Builder.Sample\Nant.Builder.Sample-Release-1.0.0.1.cspkg" />
 			<arg value="-cloudConfigLocation C:\dev\releases\Nant.Builder.Sample\ServiceConfiguration.Cloud.cscfg" />
-		</exec>
+		</exec> 
 	</target>
 	
 </project>
