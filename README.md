@@ -6,7 +6,9 @@ Nuget Package for getting Nant to automatically build, version and deploy your s
 Getting Started
 ---------------
 
-Checkout the blogpost [Automating Visual Studio 2010 builds and deployments with Nant.Builder](http://iainhunter.wordpress.com/2012/05/11/automating-visual-studio-2010-builds-and-deployments-with-nant-builder/) for details on how to get started.
+Checkout the blogposts below for more details on getting started with Nant.Builder
+* [Automating Visual Studio 2010 builds and deployments with Nant.Builder](http://iainhunter.wordpress.com/2012/05/11/automating-visual-studio-2010-builds-and-deployments-with-nant-builder/)
+* [Visual Studio Turbo – DIY AppHarbor with Nant.Builder](http://iainhunter.wordpress.com/2012/05/28/visual-studio-turbo-diy-appharbor-with-nant-builder/)
 
 Download from Nuget
 -------------------
