@@ -22,18 +22,27 @@
 	<property name="version.tag" value="1.0.0.1"/>
 	<property name="company.name" value="iainhunter.wordpress.com" />
 	
+	<!-- If your projects reside in a different directory from the .sln file specify here, or leave empty if not -->
+	<property name="solution.src.dir" value="src" />
+	
 	<!--Azure Settings-->
+	
+	<!-- Packaging -->
 	<property name="create.azure.package" value="true" />
-	<property name="deploy.azure.package" value="true" />
 	<!--The name of the project containing the Azure csdef, cscfg files-->
 	<property name="azure.project.name" value="Nant.Builder.Sample.Azure" />
 	<!-- This is the name of the project containing your app entry point, probably the Web project, but may be a library if using a worker role-->
 	<property name="azure.role.project.name" value="Nant.Builder.Sample.Web" />	
-	<!-- The name of the file containing your exported subcription details - IMPORTANT keep this file safe as it contains very sensitive data about your Azure sub -->
+	<!-- The name of the file containing the azure config for your app, default is .Cloud but may be custom if you have multiple configs, eg test, live etc -->
+	<property name="azure.service.config.file" value="ServiceConfiguration.Cloud.cscfg" />	
+	
+	
+	<!-- Deployment -->
+	<property name="deploy.azure.package" value="true" />
+	<!-- The name of the file containing your exported subcription details - IMPORTANT keep this file safe as it contains very sensitive credentials about your Azure sub -->
 	<property name="azure.subscripion.details.file" value="c:\dev\tools\windowsazure\subscriptions\yoursubscription.xml"/>
 
-	<!-- If your projects reside in a different directory from the .sln file specify here, or leave empty if not -->
-	<property name="solution.src.dir" value="src" />
+
 		
 	<!-- This target controls the build-->
 	<target name="buildRelease" description="Build the release, and run integration tests">

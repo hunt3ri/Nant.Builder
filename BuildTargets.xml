@@ -137,7 +137,7 @@
 		<copy todir="${local.releasespace}/${solution.name}" verbose="true" includeemptydirs="false">
 			<fileset basedir="${azure.buildspace}">
 				<include name="**/*.cspkg" />
-				<include name="**/*Cloud*.cscfg" />
+				<include name="**/${azure.service.config.file}" />
 				<exclude name="**/*.csdef"/>
 				<exclude name="**/bin/**"/>
 			</fileset>
