@@ -2,7 +2,7 @@
 <package >
     <metadata>
         <id>Nant.Builder</id>
-        <version>1.0.0.4</version>
+        <version>1.0.0.5</version>
         <title>Nant.Builder</title>
         <authors>Iain Hunter</authors>
         <projectUrl>https://github.com/hunt3ri/Nant.Builder</projectUrl>
@@ -10,12 +10,13 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <summary>Package for getting Nant to automatically build, version and deploy your solution to Windows Azure</summary>
         <description>Nant.Builder provides a set of nant scripts that allows you simply build, version and deploy your solution to windows azure.  See the project site for more details</description>
-        <releaseNotes>Adds working Azure deployment target</releaseNotes>
+        <releaseNotes>Include missing powershell script</releaseNotes>
         <copyright>Copyright 2012</copyright>
         <tags>nant ci continuous integration ccnet cruisecontrol azure</tags>
     </metadata>
     <files>
         <file src="Nant.build" target="content" />
+		<file src="DeployAzureApp.ps1" target="content" />
         <file src="GlobalBuildSettings.xml" target="content" />
         <file src="BuildTargets.xml" target="content" />
     </files>
