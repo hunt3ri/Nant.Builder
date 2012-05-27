@@ -8,7 +8,7 @@
 		<property name="solution.workspace" value="${path::combine(local.workspace, solution.name)}" />
 		<property name="is.release.local" value="true"/>
 		<property name="azure.buildspace" value="${path::combine(buildspace.src.dir, azure.project.name)}" />
-		
+
 		<if test="${property::exists('CCNetLabel')}">
 			<property name="is.release.local" value="false"/>
 			<property name="version.tag" value="${CCNetLabel}"/>
@@ -55,60 +55,61 @@
 	<target name="UpdateAssemblyInfo">
 
 		<foreach item="String" in="${solution.projects}" delim="," property="assembly.project.name">
-			
+
 			<property name="src.dir" value="${path::combine(buildspace.src.dir, assembly.project.name)}" />
-        	<property name="assemblyinfo.cs" value="${path::combine(src.dir, 'Properties\AssemblyInfo.cs')}" />
+			<property name="assemblyinfo.cs" value="${path::combine(src.dir, 'Properties\AssemblyInfo.cs')}" />
 
 			<call target="CreateAssemblyInfo"/>
-			
+
 		</foreach>
-    </target>
+	</target>
 
 	<!-- Create new AssemblyInfo file with version number and company info-->
-    <target name="CreateAssemblyInfo">
+	<target name="CreateAssemblyInfo">
 
-    	<echo message="Creating assembly file: ${assemblyinfo.cs}" />
+		<echo message="Creating assembly file: ${assemblyinfo.cs}" />
 
-        <asminfo output="${assemblyinfo.cs}"  language="CSharp">
-            <imports>
-                <import namespace="System.Reflection" />
-                <import namespace="System.Runtime.CompilerServices" />
-                <import namespace="System.Runtime.InteropServices" />
-            </imports>
-            <attributes>
-                <attribute type="AssemblyTitleAttribute" value="${assembly.project.name}" />
-                <attribute type="AssemblyDescriptionAttribute" value="" />
-                <attribute type="AssemblyConfigurationAttribute" value="" />
-                <attribute type="AssemblyCompanyAttribute" value="${company.name}" />
-                <attribute type="AssemblyProductAttribute" value="${assembly.project.name}" />
-                <attribute type="AssemblyCopyrightAttribute" value="Copyright (c) ${company.name} ${datetime::get-year(datetime::now())}" />
-                <attribute type="AssemblyTrademarkAttribute" value="" />
-                <attribute type="AssemblyCultureAttribute" value="" />
-                <attribute type="ComVisibleAttribute" value="false" />
+		<asminfo output="${assemblyinfo.cs}"  language="CSharp">
+			<imports>
+				<import namespace="System.Reflection" />
+				<import namespace="System.Runtime.CompilerServices" />
+				<import namespace="System.Runtime.InteropServices" />
+			</imports>
+			<attributes>
+				<attribute type="AssemblyTitleAttribute" value="${assembly.project.name}" />
+				<attribute type="AssemblyDescriptionAttribute" value="" />
+				<attribute type="AssemblyConfigurationAttribute" value="" />
+				<attribute type="AssemblyCompanyAttribute" value="${company.name}" />
+				<attribute type="AssemblyProductAttribute" value="${assembly.project.name}" />
+				<attribute type="AssemblyCopyrightAttribute" value="Copyright (c) ${company.name} ${datetime::get-year(datetime::now())}" />
+				<attribute type="AssemblyTrademarkAttribute" value="" />
+				<attribute type="AssemblyCultureAttribute" value="" />
+				<attribute type="ComVisibleAttribute" value="false" />
 
-                <attribute type="AssemblyVersionAttribute" value="${version.tag}" />
-                <attribute type="AssemblyFileVersionAttribute" value="${version.tag}" />
-            </attributes>
-        </asminfo>
-    </target>
+				<attribute type="AssemblyVersionAttribute" value="${version.tag}" />
+				<attribute type="AssemblyFileVersionAttribute" value="${version.tag}" />
+			</attributes>
+		</asminfo>
+	</target>
 
 
 
-    <target name="CompileSolution" description="Compiles and packages the solution ready for MsDeploy">
-        <echo message="Compiling soultion: ${solution.buildspace}\${solution.name} with configuration: ${release.configuration}"/>
-        <exec program="${msbuild4.exe}">
-            <arg value="${solution.buildspace}\${solution.name}.sln" />
-            <arg value="/p:Configuration=${release.configuration}" />
-            <arg value="/p:DeployOnBuild=true"/>
-            <arg value="/p:DeployTarget=Package"/>
-            <arg value="/p:AutoParameterizationWebConfigConnectionStrings=false" if="${create.azure.package}" /> <!--This flag must be set to false on azure builds-->
-            <arg value="/p:WarningLevel=4" />
-            <arg value="/p:TreatWarningsAsErrors=true"/>
-            <arg value="/v:m" />
-        </exec>
-    </target>
-	
-	
+	<target name="CompileSolution" description="Compiles and packages the solution ready for MsDeploy">
+		<echo message="Compiling soultion: ${solution.buildspace}\${solution.name} with configuration: ${release.configuration}"/>
+		<exec program="${msbuild4.exe}">
+			<arg value="${solution.buildspace}\${solution.name}.sln" />
+			<arg value="/p:Configuration=${release.configuration}" />
+			<arg value="/p:DeployOnBuild=true"/>
+			<arg value="/p:DeployTarget=Package"/>
+			<arg value="/p:AutoParameterizationWebConfigConnectionStrings=false" if="${create.azure.package}" />
+			<!--This flag must be set to false on azure builds-->
+			<arg value="/p:WarningLevel=4" />
+			<arg value="/p:TreatWarningsAsErrors=true"/>
+			<arg value="/v:m" />
+		</exec>
+	</target>
+
+
 	<target name="CreateAzurePackage" description="Creates package for uploading to Azure">
 		<property name="package.dir" value ="${buildspace.src.dir}/${azure.role.project.name}/obj/${release.configuration}/Package/PackageTmp/"/>
 
@@ -118,7 +119,7 @@
 		<echo message="/sitePhysicalDirectories:${azure.role.project.name};Web;${package.dir}"/>
 		<echo message="/out:${azure.buildspace}/${solution.name}-${release.configuration}-${version.tag}.cspkg"/>
 		<echo></echo>
-		
+
 		<!--Create AzureRoleProperties file-->
 		<touch file="AzureRoleProperties.txt" />
 		<echo file="AzureRoleProperties.txt" message="TargetFrameWorkVersion=v4.0 &#xa;" />
@@ -143,40 +144,37 @@
 			</fileset>
 		</copy>
 	</target>
-	
+
 	<target name="ParseSubscriptionDetails">
-		<xmlpeek file="${azure.subscripion.details.file}"
+		<xmlpeek file="${azure.subscription.credentials.file}"
 				 property="azure.subscription.id"
 				 xpath="//x:Subscriptions/x:Subscription/x:SubscriptionId">
 			<namespaces>
 				<namespace prefix="x" uri="urn:Microsoft.WindowsAzure.Samples.ManagementTools.PowerShell:WaPSCmdlets" />
 			</namespaces>
 		</xmlpeek>
-		
-		<xmlpeek file="${azure.subscripion.details.file}"
+
+		<xmlpeek file="${azure.subscription.credentials.file}"
 				 property="azure.thumbprint"
 				 xpath="//x:Subscriptions/x:Subscription/x:Thumbprint">
 			<namespaces>
 				<namespace prefix="x" uri="urn:Microsoft.WindowsAzure.Samples.ManagementTools.PowerShell:WaPSCmdlets" />
 			</namespaces>
 		</xmlpeek>
-
-		<echo message="SubId: ${azure.subscription.id}" />
-		<echo message="Thumbprint: ${azure.thumbprint}" />
 	</target>
-	
+
 	<target name="DeployAzurePackage" depends="ParseSubscriptionDetails" description="Deploys your Azure package to the Cloud :-)">
-	
+
 		<exec program="${powershell.exe} ">
 			<arg value=".\DeployAzureApp.ps1" />
-			<arg value="-environment Staging" />
-			<arg value="-serviceName "/>
-			<arg value="-thumbprint "/>
-			<arg value="-subscriptionId ''"/>
-			<arg value="-storageAccountName "/>
-			<arg value="-packageLocation C:\dev\releases\Nant.Builder.Sample\Nant.Builder.Sample-Release-1.0.0.1.cspkg" />
-			<arg value="-cloudConfigLocation C:\dev\releases\Nant.Builder.Sample\ServiceConfiguration.Cloud.cscfg" />
-		</exec> 
+			<arg value="-environment ${azure.deployment.environment}" />
+			<arg value="-serviceName ${azure.hosted.service.name}"/>
+			<arg value="-thumbprint ${azure.thumbprint}"/>
+			<arg value="-subscriptionId '${azure.subscription.id}'"/>
+			<arg value="-storageAccountName ${azure.storage.account.name}"/>
+			<arg value="-packageLocation ${local.releasespace}\${solution.name}\${solution.name}-${release.configuration}-${version.tag}.cspkg" />
+			<arg value="-cloudConfigLocation ${local.releasespace}\${solution.name}\${azure.service.config.file}" />
+		</exec>
 	</target>
-	
+
 </project>

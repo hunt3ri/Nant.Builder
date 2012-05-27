@@ -21,47 +21,52 @@
 	<!-- Manually set version, if using CCNet this will be overwritten later -->
 	<property name="version.tag" value="1.0.0.1"/>
 	<property name="company.name" value="iainhunter.wordpress.com" />
-	
+
 	<!-- If your projects reside in a different directory from the .sln file specify here, or leave empty if not -->
 	<property name="solution.src.dir" value="src" />
-	
+
 	<!--Azure Settings-->
-	
+
 	<!-- Packaging -->
-	<property name="create.azure.package" value="true" />
+	<property name="create.azure.package" value="false" />
 	<!--The name of the project containing the Azure csdef, cscfg files-->
 	<property name="azure.project.name" value="Nant.Builder.Sample.Azure" />
 	<!-- This is the name of the project containing your app entry point, probably the Web project, but may be a library if using a worker role-->
-	<property name="azure.role.project.name" value="Nant.Builder.Sample.Web" />	
+	<property name="azure.role.project.name" value="Nant.Builder.Sample.Web" />
 	<!-- The name of the file containing the azure config for your app, default is .Cloud but may be custom if you have multiple configs, eg test, live etc -->
-	<property name="azure.service.config.file" value="ServiceConfiguration.Cloud.cscfg" />	
-	
-	
+	<property name="azure.service.config.file" value="ServiceConfiguration.Cloud.cscfg" />
+
 	<!-- Deployment -->
-	<property name="deploy.azure.package" value="true" />
+	<property name="deploy.azure.package" value="false" />
 	<!-- The name of the file containing your exported subcription details - IMPORTANT keep this file safe as it contains very sensitive credentials about your Azure sub -->
-	<property name="azure.subscripion.details.file" value="c:\dev\tools\windowsazure\subscriptions\yoursubscription.xml"/>
+	<property name="azure.subscription.credentials.file" value="C:\dev\tools\WindowsAzure\Subscriptions\yoursub.xml"/>
+	<!-- The name of a azure hosted service where you want to deploy your app-->
+	<property name="azure.hosted.service.name" value="yourservicename" />
+	<!-- The environment type either Staging or Production-->
+	<property name="azure.deployment.environment" value="staging"/>
+	<!-- The name of a storage account that exists on your subscription, this will be used to temporarily load your app into while it's being deploed-->
+	<property name="azure.storage.account.name" value="yourstorageaccount"/>
 
 
-		
+
 	<!-- This target controls the build-->
 	<target name="buildRelease" description="Build the release, and run integration tests">
 
-        <call target="DetermineBuild" />
-		<!--<call target="AssembleFromWorkspace" if="${is.release.local}"/>
+		<call target="DetermineBuild" />
+		<call target="AssembleFromWorkspace" if="${is.release.local}"/>
 
 		<call target="UpdateAssemblyInfo" />
 
 		<call target="CompileSolution" /> 
 		
-		<call target="CreateAzurePackage" if="${create.azure.package}" /> -->
+		<call target="CreateAzurePackage" if="${create.azure.package}" />
 
 		<!--We can only deploy package if we've packaged it in the first place-->
 		<if test="${deploy.azure.package and deploy.azure.package}"  >
 			<call target="DeployAzurePackage" />
 		</if>
 	</target>
-	
+
 	<!--Load BuildTargets-->
 	<include buildfile="BuildTargets.xml" />
 
