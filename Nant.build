@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 
-<!-- See my blog post here, for further documentation on how to use Nant.Builder: 
-     http://iainhunter.wordpress.com/2012/05/11/automating-visual-studio-2010-builds-and-deployments-with-nant-builder/ -->
+<!-- See my blog posts here, for further documentation on how to use Nant.Builder: 
+     http://iainhunter.wordpress.com/2012/05/11/automating-visual-studio-2010-builds-and-deployments-with-nant-builder/ 
+	 http://iainhunter.wordpress.com/2012/05/28/visual-studio-turbo-diy-appharbor-with-nant-builder/
+	 -->
 <project default="buildRelease" basedir=".">
 
 	<!-- IMPORTANT PLEASE SET THESE VALUES APPROPRIATELY FOR YOUR ENVIRONMENT IN GLOBALBUILDSETTINGS.XML.  If you use NantBuilder 
