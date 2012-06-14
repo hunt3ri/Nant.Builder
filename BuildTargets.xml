@@ -108,6 +108,15 @@
 			<arg value="/v:m" />
 		</exec>
 	</target>
+	
+	
+	<target name="RunNunitTests">
+		<echo message="Running Nunit"/>
+		<exec program="${nunit-console.exe}">
+			<arg value="${buildspace.src.dir}/${tests.project.name}/bin/${release.configuration}/${tests.project.name}.dll" />
+			<arg value="/xml=${buildspace.src.dir}/${tests.project.name}/bin/${release.configuration}/${tests.project.name}-results.xml" />
+		</exec>
+	</target>
 
 
 	<target name="CreateAzurePackage" description="Creates package for uploading to Azure">

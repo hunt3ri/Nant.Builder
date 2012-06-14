@@ -27,6 +27,11 @@
 	<!-- If your projects reside in a different directory from the .sln file specify here, or leave empty if not -->
 	<property name="solution.src.dir" value="src" />
 
+	<!--Nunit Test Settings-->
+	<property name="run.nunit.tests" value="false" />
+	<!--The name of the project containing your Nunit tests-->
+	<property name="tests.project.name" value="Nant.Builder.Sample.Tests" />
+	
 	<!--Azure Settings-->
 
 	<!-- Packaging -->
@@ -60,6 +65,8 @@
 		<call target="UpdateAssemblyInfo" />
 
 		<call target="CompileSolution" /> 
+		
+		<call target="RunNunitTests" if="${run.nunit.tests}" />
 		
 		<call target="CreateAzurePackage" if="${create.azure.package}" />
 
