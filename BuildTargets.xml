@@ -111,13 +111,35 @@
 	
 	
 	<target name="RunNunitTests">
-		<echo message="Running Nunit"/>
-		<exec program="${nunit-console.exe}">
-			<arg value="${buildspace.src.dir}/${tests.project.name}/bin/${release.configuration}/${tests.project.name}.dll" />
-			<arg value="/xml=${buildspace.src.dir}/${tests.project.name}/bin/${release.configuration}/${tests.project.name}-results.xml" />
-		</exec>
+		<foreach item="String" in="${test.project.names}" delim="," property="test.project.name">
+			<echo message="Running Nunit tests for ${test.project.name}"/>
+			<exec program="${nunit-console.exe}">
+				<arg value="${buildspace.src.dir}/${test.project.name}/bin/${release.configuration}/${test.project.name}.dll" />
+				<arg value="/xml=${buildspace.src.dir}/${test.project.name}/bin/${release.configuration}/${test.project.name}-results.xml" />
+			</exec>
+		</foreach>
 	</target>
 
+	
+	<loadtasks assembly="${local.workspace}/${solution.name}/packages/FluentMigrator.Tools.1.0.3.0/tools/AnyCPU/40/FluentMigrator.NAnt.dll" if="${run.db.migrations}" />
+	<target name="RunDbMigrations" description="Migrate the database to the latest version">
+		<migrate
+	    	database="sqlserver2008"
+	    	connection="${connection.string}"
+	    	target="${buildspace.src.dir}/${migrations.project.name}/bin/${release.configuration}/${migrations.project.name}.dll"
+		/>
+	</target>
+
+
+	<target name="RollbackDbMigrations" description="Migrates the database back to specified version">
+		<migrate
+	    	database="sqlserver2008"
+	    	connection="${connection.string}"
+	    	target="${buildspace.src.dir}/${migrations.project.name}/bin/${release.configuration}/${migrations.project.name}.dll"
+			task="migrate:down"
+			to="${rollback.to.version}"
+		/>
+	</target>
 
 	<target name="CreateAzurePackage" description="Creates package for uploading to Azure">
 		<property name="package.dir" value ="${buildspace.src.dir}/${azure.role.project.name}/obj/${release.configuration}/Package/PackageTmp/"/>

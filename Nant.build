@@ -29,8 +29,20 @@
 
 	<!--Nunit Test Settings-->
 	<property name="run.nunit.tests" value="false" />
-	<!--The name of the project containing your Nunit tests-->
-	<property name="tests.project.name" value="Nant.Builder.Sample.Tests" />
+	<!--The names of the projects containing your Nunit tests, comma seperated with no spaces-->
+	<property name="test.project.names" value="Nant.Builder.Sample.Tests" />
+	
+	<!-- Database Migration Settings - expects FluentMigrator-->
+	<property name="run.db.migrations" value="false" />
+	<!--The name of the project containing your FluentMigrator tests-->
+	<property name="migrations.project.name" value="Nant.Builder.Sample.Migrations" />
+	<!--The connection string you for the db you want to migrate-->
+	<property name="connection.string" value="YOUR-CONNECTIONSTRING-HERE" />
+	<!-- Set flag to true if you wish to rollback a db migration, you need to specify a migration number also-->
+	<property name="rollback.db.migrations" value="false" />
+	<!-- The migration number you wish to rollback to - WARNING be careful you don't delete data by setting this value incorrectly-->
+	<property name="rollback.to.version" value="0" />
+	
 	
 	<!--Azure Settings-->
 
@@ -67,6 +79,10 @@
 		<call target="CompileSolution" /> 
 		
 		<call target="RunNunitTests" if="${run.nunit.tests}" />
+		
+	    <call target="RollbackDbMigrations" if="${rollback.db.migrations}"/>
+		
+		<call target="RunDbMigrations" if="${run.db.migrations}" />
 		
 		<call target="CreateAzurePackage" if="${create.azure.package}" />
 
