@@ -180,7 +180,7 @@
 				 property="azure.subscription.id"
 				 xpath="//x:Subscriptions/x:Subscription/x:SubscriptionId">
 			<namespaces>
-				<namespace prefix="x" uri="urn:Microsoft.WindowsAzure.Samples.ManagementTools.PowerShell:WaPSCmdlets" />
+				<namespace prefix="x" uri="urn:Microsoft.WindowsAzure.Management:WaPSCmdlets" />
 			</namespaces>
 		</xmlpeek>
 
@@ -188,15 +188,18 @@
 				 property="azure.thumbprint"
 				 xpath="//x:Subscriptions/x:Subscription/x:Thumbprint">
 			<namespaces>
-				<namespace prefix="x" uri="urn:Microsoft.WindowsAzure.Samples.ManagementTools.PowerShell:WaPSCmdlets" />
+				<namespace prefix="x" uri="urn:Microsoft.WindowsAzure.Management:WaPSCmdlets" />
 			</namespaces>
 		</xmlpeek>
 	</target>
 
 	<target name="DeployAzurePackage" depends="ParseSubscriptionDetails" description="Deploys your Azure package to the Cloud :-)">
 
+		<property name="deploy.label" value="${solution.name}-${release.configuration}-${version.tag}" />
+		
 		<exec program="${powershell.exe} ">
 			<arg value=".\DeployAzureApp.ps1" />
+			<arg value="-ExecutionPolicy unrestricted" />
 			<arg value="-environment ${azure.deployment.environment}" />
 			<arg value="-serviceName ${azure.hosted.service.name}"/>
 			<arg value="-thumbprint ${azure.thumbprint}"/>
@@ -204,6 +207,7 @@
 			<arg value="-storageAccountName ${azure.storage.account.name}"/>
 			<arg value="-packageLocation ${local.releasespace}\${solution.name}\${solution.name}-${release.configuration}-${version.tag}.cspkg" />
 			<arg value="-cloudConfigLocation ${local.releasespace}\${solution.name}\${azure.service.config.file}" />
+			<arg value="-deploymentLabel ${deploy.label}" />
 		</exec>
 	</target>
 
