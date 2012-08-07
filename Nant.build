@@ -36,8 +36,10 @@
 	<property name="run.db.migrations" value="false" />
 	<!--The name of the project containing your FluentMigrator tests-->
 	<property name="migrations.project.name" value="Nant.Builder.Sample.Migrations" />
+	<!--Database type, eg sqlserver2008, sqlite -->
+	<property name="database.type" value="sqlserver2008" />
 	<!--The connection string you for the db you want to migrate-->
-	<property name="connection.string" value="YOUR-CONNECTIONSTRING-HERE" />
+	<property name="connection.string" value="YOUR-CONNECTION-STRING-HERE" />
 	<!-- Set flag to true if you wish to rollback a db migration, you need to specify a migration number also-->
 	<property name="rollback.db.migrations" value="false" />
 	<!-- The migration number you wish to rollback to - WARNING be careful you don't delete data by setting this value incorrectly-->
@@ -80,8 +82,9 @@
 		
 		<call target="RunNunitTests" if="${run.nunit.tests}" />
 		
+		<!-- Migration tasks -->
+	    <loadtasks assembly="${solution.buildspace}/packages/FluentMigrator.Tools.1.0.3.0/tools/AnyCPU/40/FluentMigrator.NAnt.dll" if="${run.db.migrations}" />
 	    <call target="RollbackDbMigrations" if="${rollback.db.migrations}"/>
-		
 		<call target="RunDbMigrations" if="${run.db.migrations}" />
 		
 		<call target="CreateAzurePackage" if="${create.azure.package}" />

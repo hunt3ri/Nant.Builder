@@ -2,7 +2,7 @@
 <package >
     <metadata>
         <id>Nant.Builder</id>
-        <version>1.0.0.9</version>
+        <version>1.0.0.10</version>
         <title>Nant.Builder</title>
         <authors>Iain Hunter</authors>
         <projectUrl>https://github.com/hunt3ri/Nant.Builder</projectUrl>
